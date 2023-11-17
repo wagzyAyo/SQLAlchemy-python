@@ -1,6 +1,9 @@
 from models import User, Comment
+from sqlalchemy.orm import Session
+from connection import engine
 
 
+session = Session(bind=engine)
 user1 = User(
     username='Tayo',
     email_addresss='Tayo19@gmail.com',
@@ -28,3 +31,7 @@ Matty = User(
         Comment(text='Whats Popin')
     ]
 )
+
+session.add_all([user1, paul, Matty])
+
+session.commit()

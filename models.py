@@ -1,18 +1,16 @@
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.orm import declarative_base, mapped_column, relationship
 from sqlalchemy import ForeignKey, Text
 from typing import List
 
-
-class Base(DeclarativeBase):
-    pass
+Base = declarative_base()
 
 
 class User(Base):
     __tablename__ = 'users'
-    id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str] = mapped_column(nullable=False)
-    email_address: Mapped[str]
-    comments: Mapped[List['Comment']] = relationship(back_populates='user')
+    id: mapped_column[int] = mapped_column(primary_key=True)
+    username: mapped_column[str] = mapped_column(nullable=False)
+    email_address: mapped_column[str]
+    comments: List['Comment'] = relationship(back_populates='user')
 
     def __repr__(self) -> str:
         return f"<User username={self.username}>"
@@ -20,10 +18,10 @@ class User(Base):
 
 class Comment(Base):
     __tablename__ = 'comments'
-    id: Mapped[int] = mapped_column(primary_key=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
-    text: Mapped[str] = mapped_column(Text, nullable=False)
-    User: Mapped['User'] = relationship(back_populates='comments')
+    id: mapped_column[int] = mapped_column(primary_key=True)
+    user_id: mapped_column[int] = mapped_column(ForeignKey('users.id'))
+    text: mapped_column[str] = mapped_column(Text, nullable=False)
+    user: 'User' = relationship(back_populates='comments')
 
     def __repr__(self) -> str:
-        return f"<Comment text={self.text} by {self.User.username}>"
+        return f"<Comment text={self.text} by {self.user.username}>"
